@@ -41,6 +41,44 @@ class ConnectFour
     input if input.between?(min, max)
   end
 
+  def play_game
+    play_round until finished?
+    outing
+  end
+
+  def outing
+    display
+    puts "Game is finished!"
+    winner = check_for_winner
+    return puts "It's a draw!" unless winner
+
+    puts "Winner is #{winner}"
+  end
+
+  def play_round
+    display
+    begin
+      print "Please enter a column: "
+      column = player_input(1, @columns) - 1
+      add_piece(@current, column)
+    rescue ArgumentError => e
+      puts "Error: #{e.message}. Retrying..."
+      retry
+    end
+    toggle_current_player
+  end
+
+  def display
+    system "clear"
+    puts <<~HEREDOC
+            Connect Four Game
+      Current player: #{@current}
+
+      #{field_to_string}
+
+    HEREDOC
+  end
+
   private
 
   attr_reader :field
@@ -100,5 +138,27 @@ class ConnectFour
 
   def toggle_current_player
     @current = @current == :red ? :yellow : :red
+  end
+
+  def field_to_string
+    string = ""
+    field.each do |row|
+      row.each do |cell|
+        string << char_from_status(cell[:status])
+      end
+      string << "\n"
+    end
+    string
+  end
+
+  def char_from_status(status)
+    case status
+    when :empty
+      " "
+    when :red
+      "\e[31mX\e[0m"
+    else
+      "\e[33mX\e[0m"
+    end
   end
 end

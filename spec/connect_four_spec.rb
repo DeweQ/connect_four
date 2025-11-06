@@ -190,4 +190,23 @@ describe ConnectFour do
       end
     end
   end
+  describe "#play_round" do
+    let(:field) do
+      [[{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }],
+       [{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }],
+       [{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }],
+       [{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }],
+       [{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }],
+       [{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }]]
+    end
+    subject(:round_game) { described_class.new(field) }
+    before do
+      allow(round_game).to receive(:gets).and_return("3")
+      allow(round_game).to receive(:display)
+    end
+
+    it "changes the field" do
+      expect { round_game.play_round }.to(change { field })
+    end
+  end
 end
