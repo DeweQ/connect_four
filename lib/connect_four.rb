@@ -8,8 +8,6 @@ class ConnectFour
   end
 
   def add_piece(color, column)
-    raise ArgumentError, "Column out of range" unless column.between?(0, @columns - 1)
-
     field.reverse.each do |row|
       return row[column][:status] = color if row[column][:status] == :empty
     end
@@ -27,6 +25,20 @@ class ConnectFour
     field.all? do |row|
       row.all? { |cell| cell[:status] != :empty }
     end
+  end
+
+  def player_input(min, max)
+    loop do
+      user_input = gets.chomp
+      verified_input = verify(user_input.to_i, min, max) if user_input.match?(/^\d+$/)
+      return verified_input unless verified_input.nil?
+
+      puts "Wrong input. Please enter a number between #{min} and #{max}"
+    end
+  end
+
+  def verify(input, min, max)
+    input if input.between?(min, max)
   end
 
   private

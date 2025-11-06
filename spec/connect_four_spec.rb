@@ -33,13 +33,6 @@ describe ConnectFour do
         expect { add_game.add_piece(color, column) }.to raise_error(ArgumentError, "Column overflow")
       end
     end
-
-    context "when given incorrect column" do
-      subject(:column_game) { described_class.new }
-      it "raise argument error" do
-        expect { column_game.add_piece(:yellow, -1) }.to raise_error(ArgumentError, "Column out of range")
-      end
-    end
   end
 
   describe "#check_for_winner" do
@@ -143,6 +136,57 @@ describe ConnectFour do
       subject(:full_game) { described_class.new(field) }
       it "returns true" do
         expect(full_game.finished?).to be true
+      end
+    end
+  end
+
+  describe "#verify" do
+    subject(:verify_game) { described_class.new }
+    let(:min) { 0 }
+    let(:max) { 7 }
+
+    context "when given a valid input as argument" do
+      let(:valid_input) { 3 }
+      it "returns valid input" do
+        expect(verify_game.verify(valid_input, min, max)).to eq(valid_input)
+      end
+    end
+
+    context "when given invalid input" do
+      let(:invalid_input) { -1 }
+      it "returns nil" do
+        expect(verify_game.verify(invalid_input, min, max)).to be_nil
+      end
+    end
+  end
+
+  describe "#player_input" do
+    subject(:input_game) { described_class.new }
+    let(:min) { 0 }
+    let(:max) { 7 }
+    let(:error_message) { "Wrong input. Please enter a number between #{min} and #{max}" }
+    context "when user number is in range" do
+      before do
+        valid_input = "3\n"
+        allow(input_game).to receive(:gets).and_return(valid_input)
+      end
+
+      it "stops loop and does not display error message" do
+        expect(input_game).not_to receive(:puts).with(error_message)
+        input_game.player_input(min, max)
+      end
+    end
+
+    context "when user inputs an incorrect value once, then a valid input" do
+      before do
+        invalid_input = "asdf"
+        valid_input = "3"
+        allow(input_game).to receive(:gets).and_return(invalid_input, valid_input)
+      end
+
+      it "completes loop and displays error message once" do
+        expect(input_game).to receive(:puts).with(error_message).once
+        input_game.player_input(min, max)
       end
     end
   end
