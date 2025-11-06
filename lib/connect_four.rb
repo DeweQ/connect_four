@@ -4,6 +4,7 @@ class ConnectFour
     @field = field
     @rows = field.size
     @columns = field[0].size
+    @current = :red
   end
 
   def add_piece(color, column)
@@ -17,6 +18,15 @@ class ConnectFour
 
   def check_for_winner
     check_rows || check_columns || check_diagonals
+  end
+
+  def finished?
+    winner = check_for_winner
+    return true unless winner.nil?
+
+    field.all? do |row|
+      row.all? { |cell| cell[:status] != :empty }
+    end
   end
 
   private
@@ -74,5 +84,9 @@ class ConnectFour
 
       return slice[0][:status] if slice.uniq.size == 1 && slice[0][:status] != :empty
     end
+  end
+
+  def toggle_current_player
+    @current = @current == :red ? :yellow : :red
   end
 end

@@ -1,9 +1,6 @@
 require_relative "../lib/connect_four"
 
 describe ConnectFour do
-  describe "#initialize" do
-  end
-
   describe "#add_piece" do
     context "when given correct column" do
       let(:field) do
@@ -97,6 +94,55 @@ describe ConnectFour do
 
       it "returns :red" do
         expect(anti_diagonal.check_for_winner).to eq(:red)
+      end
+    end
+  end
+
+  describe "#finished?" do
+    context "when game there is no winner and field is not full" do
+      let(:field) do
+        [[{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }],
+         [{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }],
+         [{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }],
+         [{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }],
+         [{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }],
+         [{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }]]
+      end
+      subject(:new_game) { described_class.new(field) }
+
+      it "returns false" do
+        expect(new_game.finished?).to be false
+      end
+    end
+
+    context "when game has a winner" do
+      let(:field) do
+        [[{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :red }],
+         [{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :yellow }],
+         [{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :red }],
+         [{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :red }, { status: :yellow }],
+         [{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :red }, { status: :yellow }, { status: :red }],
+         [{ status: :empty }, { status: :red }, { status: :yellow }, { status: :red }, { status: :yellow }, { status: :yellow }, { status: :yellow }]]
+      end
+      subject(:won_game) { described_class.new(field) }
+
+      it "returns true" do
+        expect(won_game.finished?).to be true
+      end
+    end
+
+    context "when field is full and there is no winner" do
+      let(:field) do
+        [[{ status: :red }, { status: :red }, { status: :yellow }, { status: :yellow }, { status: :red }, { status: :red }, { status: :yellow }],
+         [{ status: :yellow }, { status: :yellow }, { status: :red }, { status: :red }, { status: :yellow }, { status: :yellow }, { status: :red }],
+         [{ status: :red }, { status: :red }, { status: :yellow }, { status: :yellow }, { status: :red }, { status: :red }, { status: :yellow }],
+         [{ status: :yellow }, { status: :yellow }, { status: :red }, { status: :red }, { status: :yellow }, { status: :yellow }, { status: :red }],
+         [{ status: :red }, { status: :red }, { status: :yellow }, { status: :yellow }, { status: :red }, { status: :red }, { status: :yellow }],
+         [{ status: :yellow }, { status: :yellow }, { status: :red }, { status: :red }, { status: :yellow }, { status: :yellow }, { status: :red }]]
+      end
+      subject(:full_game) { described_class.new(field) }
+      it "returns true" do
+        expect(full_game.finished?).to be true
       end
     end
   end
