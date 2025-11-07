@@ -110,7 +110,7 @@ class ConnectFour
 
   def collect_diagonal(row, column, direction)
     diagonal = []
-    while row < @rows && column < @columns
+    while row < @rows && column.between?(0, @columns)
       diagonal << field[row][column]
       row += 1
       column += direction

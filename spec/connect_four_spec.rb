@@ -89,6 +89,22 @@ describe ConnectFour do
         expect(anti_diagonal.check_for_winner).to eq(:red)
       end
     end
+
+    context "when get diagonal over border" do
+      let(:field) do
+        [[{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }],
+         [{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }],
+         [{ status: :empty }, { status: :empty }, { status: :red }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }],
+         [{ status: :empty }, { status: :red }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }],
+         [{ status: :red }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }],
+         [{ status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :empty }, { status: :red }]]
+      end
+      subject(:diagonal_game) { described_class.new(field) }
+
+      it "rerurn nil" do
+        expect(diagonal_game.check_for_winner).to be_nil
+      end
+    end
   end
 
   describe "#finished?" do
