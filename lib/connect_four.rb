@@ -141,10 +141,11 @@ class ConnectFour
   end
 
   def field_to_string
-    string = ""
+    string = "1|2|3|4|5|6|7|\n"
     field.each do |row|
       row.each do |cell|
         string << char_from_status(cell[:status])
+        string << "|"
       end
       string << "\n"
     end
